@@ -168,7 +168,7 @@ const setBGImage = (weatherClass) => {
 const buildScreenReaderWeather = (weatherJson, locationObj) => {
   const location = locationObj.getName();
   const unit = locationObj.getUnit();
-  const tempUnit = unit === "imperial" ? "F" : "C";
+  const tempUnit = unit === "imperial" ? "Fahrenheit" : "Celcius";
   return `${weatherJson.current.weather[0].description} and ${Math.round(Number(weatherJson.current.temp))}°${tempUnit} in ${location}`;
 };
 
@@ -183,7 +183,12 @@ const createCurrentConditionsDivs = (weatherObj, unit) => {
     weatherObj.current.weather[0].icon, 
     weatherObj.current.weather[0].description
     );
-  const temp = createElem("div", "temp", `${Math.round(Number(weatherObj.current.temp))}°`);
+  const temp = createElem(
+    "div", 
+    "temp", 
+    `${Math.round(Number(weatherObj.current.temp))}°`,
+    tempUnit
+  );
   const properDesc = toProperCase(weatherObj.current.weather[0].description);
   const desc = createElem("div", "desc", properDesc);
   const feels = createElem("div", "feels", `Feels Like ${Math.round(Number(weatherObj.current.feels_like))}°`);
@@ -213,8 +218,8 @@ const createElem = (elemType, divClassName, divText, unit) => {
   }
   if (divClassName === "temp") {
     const unitDiv = document.createElement("div");
-    unitDiv.classList.add("unit");
-    unitDiv.textContent - unit;
+    unitDiv.className = "unit";
+    unitDiv.textContent = unit;
     div.appendChild(unitDiv);
   }
   return div;
@@ -224,7 +229,7 @@ const translateIconToFontAwesome = (icon) => {
   const i = document.createElement("i");
   const firstTwoChars = icon.slice(0, 2);
   const lastChar = icon.slice(2);
-  switch(firstTwoChars) {
+  switch (firstTwoChars) {
     case "01" :
       if (lastChar === "d") {
         i.classList.add("far", "fa-sun");
@@ -270,9 +275,9 @@ const translateIconToFontAwesome = (icon) => {
   return i;
 };
 
-const displayCurrentConditions = (currentCondtionsArray) => {
+const displayCurrentConditions = (currentConditionsArray) => {
   const ccContainer = document.getElementById("currentForecast__conditions");
-  currentCondtionsArray.forEach(cc => {
+  currentConditionsArray.forEach((cc) => {
     ccContainer.appendChild(cc);
   });
 }
